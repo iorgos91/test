@@ -1,3 +1,25 @@
+let start = document.getElementById("start"),
+    bgtValue = document.getElementsByClassName("budget-value"),
+    dayBgtValue = document.getElementsByClassName("daybudget-value"),
+    lvlValue = document.getElementsByClassName("level-value"),
+    expValue = document.getElementsByClassName("expenses-value"),
+    optExpValue = document.getElementsByClassName("optionalexpenses-value"),
+    incValue = document.getElementsByClassName("income-value"),
+    mSaveValue = document.getElementsByClassName("monthsavings-value"),
+    ySaveValue = document.getElementsByClassName("yearsavings-value"),
+    expItem = document.getElementsByClassName("expenses-item"),
+    expBtn = document.getElementsByTagName("button")[0],
+    optExpBtn = document.getElementsByTagName("button")[1],
+    countBtn = document.getElementsByTagName("button")[2],
+    optExpItem = document.querySelectorAll (".optionalexpenses-item"),
+    inc = document.querySelector ("#income"),
+    save = document.querySelector ("#savings"),
+    sum = document.querySelector ("#sum"),
+    percent = document.querySelector ("#percent"),
+    year = document.querySelector (".year-value"),
+    month = document.querySelector (".month-value"),
+    day = document.querySelector (".day-value");
+
 let money, time;
 
 function start() {
