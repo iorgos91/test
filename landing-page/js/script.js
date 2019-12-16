@@ -1,27 +1,27 @@
 window.addEventListener('DOMContentLoaded', function(){
     'use strict';
 
-
     let tab = document.querySelectorAll('.info-header-tab'),
         info = document.querySelector('.info-header'),
         tabContent = document.querySelectorAll('.info-tabcontent');
 
+    //спрятать неактивные вкладки
     function hideTabContent(a){
         for (let i = a; i < tabContent.length; i++){
             tabContent[i].classList.remove('show');
             tabContent[i].classList.add('hide');
         }
     }
-
     hideTabContent(1);
+
+    //переключение вкладок
     function showTabContent (b){
         if (tabContent[b].classList.contains('hide')){
             tabContent[b].classList.remove('hide');
             tabContent[b].classList.add('show');
         }
     }
-
-    info.addEventListener('click', (event) => {
+    info.addEventListener('click', event => {
         let target = event.target;
         if (target && target.classList.contains('info-header-tab')){
             for(let i = 0; i < tab.length; i++) {
@@ -36,7 +36,7 @@ window.addEventListener('DOMContentLoaded', function(){
 
     //Timer
 
-    let deadline = '2019-07-30';
+    let deadline = '2019-12-31';
 
     function getTimeRemaining (endtime) {
         let t = Date.parse(endtime) - Date.parse(new Date()),
@@ -111,7 +111,7 @@ window.addEventListener('DOMContentLoaded', function(){
         document.body.style.overflow = '';
     });
 
-    //Form
+    //Form + Promise
 
     let message = {
         loading: 'Загрузка...',
@@ -125,72 +125,129 @@ window.addEventListener('DOMContentLoaded', function(){
         contactInput = contactForm.getElementsByTagName('input'),
         statusMessage = document.createElement('div');
 
-        statusMessage.classList.add('status');   
+    statusMessage.classList.add('status');   
+    
+    function sendForm (elem, inp){
+        elem.addEventListener ('submit', function(event){
+            event.preventDefault();
+            elem.appendChild(statusMessage);
         
-    form.addEventListener ('submit', function(event){
-        event.preventDefault();
-        form.appendChild(statusMessage);
+            let formData = new FormData(elem);
 
-        let request = new XMLHttpRequest();
-        request.open('POST', 'server.php');
-        request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-
-        let formData = new FormData(form);
-
-        let obj = {};
-        formData.forEach(function(value, key){
-            obj[key] = value;
-        });
-        let json = JSON.stringify(obj);
-
-        request.send(json);
-
-        request.addEventListener ('readystatechange', function(){
-            if (request.readyState < 4) {
-                statusMessage.innerHTML = message.loading;
-            } else if (request.readyState === 4 && request.status == 200) {
-                statusMessage.innerHTML = message.success;
-            } else {
-                statusMessage.innerHTML = message.failure;
+            function postData(data) {
+                return new Promise (function (resolve, reject) {
+                    let request = new XMLHttpRequest();
+                    request.open('POST', 'server.php');
+                    request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+                    request.onreadystatechange = function(){
+                        if (request.readyState < 4) {
+                            resolve()
+                        } else if (request.readyState === 4 && request.status == 200) {
+                            resolve()                    
+                        } else {
+                            reject()
+                        }
+                    }
+                    request.send(data);
+                })
             }
-        });
 
-        for (let i = 0; i < input.length; i++) {
-            input[i].value = '';
+            function clearInput (){
+                for (let i = 0; i < inp.length; i++) {
+                    inp[i].value = '';
+                }
+            }
+            postData(formData)
+                .then(() => statusMessage.innerHTML = message.loading)
+                .then(() => statusMessage.innerHTML = message.success)
+                .catch(() => statusMessage.innerHTML = message.failure)
+                .then(clearInput)
+        });
+    }
+    sendForm(form, input);
+    sendForm(contactForm, contactInput);
+    
+    //Slider
+    let slideIndex = 1,
+        slides = document.querySelectorAll('.slider-item'),
+        prev = document.querySelector('.prev'),
+        next = document.querySelector('.next'),
+        dotsWrap = document.querySelector('.slider-dots'),
+        dots = document.querySelectorAll('.dot');
+    
+    showSlides(slideIndex);
+    function showSlides (n){
+
+        if (n > slides.length) {
+            slideIndex = 1;
+        } else if ( n < 1) {
+            slideIndex = slides.length; 
+        }
+        slides.forEach(item => item.style.display = 'none');
+        dots.forEach(item => item.classList.remove('dot-active'));
+        slides[slideIndex-1].style.display = 'block';
+        dots[slideIndex-1].classList.add('dot-active');
+    }
+    function toggleSlides(n) {
+        showSlides(slideIndex += n)
+    }
+    function currentSlide(n){
+        showSlides (slideIndex = n);
+    }
+    prev.addEventListener('click', () => {
+        toggleSlides(-1);
+    });
+    next.addEventListener('click', () => {
+        toggleSlides(1);
+    });
+    dotsWrap.addEventListener('click', event => {
+        for(let i = 0; i < dots.length + 1; i++){
+            if (event.target.classList.contains('dot') && event.target == dots[i-1]){
+                currentSlide(i);
+            }
         }
     });
 
-    contactForm.addEventListener ('submit', function(event){
-        event.preventDefault();
-        contactForm.appendChild(statusMessage);
+    //Calculator
 
-        let request = new XMLHttpRequest();
-        request.open('POST', 'server.php');
-        request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+    let persons = document.querySelectorAll('.counter-block-input')[0],
+        restDays = document.querySelectorAll('.counter-block-input')[1],
+        place = document.querySelector('#select'),
+        totalValue = document.querySelector('#total'),
+        personsSum = 0,
+        daysSum = 0,
+        total = 0,
+        reset = document.querySelector('#reset-btn');
 
-        let contactFormData = new FormData(contactForm);
-
-        let obj2 = {};
-        contactFormData.forEach(function(value, key){
-            obj2[key] = value;
-        });
-        let json = JSON.stringify(obj2);
-
-        request.send(json);
-
-        request.addEventListener ('readystatechange', function(){
-            if (request.readyState < 4) {
-                statusMessage.innerHTML = message.loading;
-            } else if (request.readyState === 4 && request.status == 200) {
-                statusMessage.innerHTML = message.success;
-            } else {
-                statusMessage.innerHTML = message.failure;
-            }
-        });
-
-        for (let i = 0; i < contactInput.length; i++) {
-            contactInput[i].value = '';
+    totalValue.innerHTML = 0;
+    persons.addEventListener('input', function() {
+        personsSum = +this.value;
+        total = (daysSum * personsSum) * 4000;
+        if (restDays.value == '' || restDays.value <= 0) {
+            totalValue.innerHTML = 0;
+        } else {
+            totalValue.innerHTML = total;
+        }
+    });
+    restDays.addEventListener('input', function() {
+        daysSum = +this.value;
+        total = (daysSum * personsSum) * 4000;
+        if (persons.value == '' || persons.value <= 0) {
+            totalValue.innerHTML = 0;
+        } else {
+            totalValue.innerHTML = total;
         }
     });
 
+    place.addEventListener('input', function() {
+        if (persons.value == '' || restDays.value == '') {
+            totalValue.innerHTML = 0;
+        } else {
+            let a = total;
+            totalValue.innerHTML = a * this.options[this.selectedIndex].value;
+        }
+    });
+    reset.addEventListener('click', () => {
+        totalValue.innerHTML = 0;
+    });
 });

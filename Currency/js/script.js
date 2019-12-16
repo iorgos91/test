@@ -15,9 +15,9 @@ inputRub.addEventListener('input', () => {
             request.addEventListener('readystatechange', function() {
                 if (request.readyState === 4) {
                     if (request.status == 200) {
-                    resolve(this.response)
+                        resolve(this.response);
                     } else {
-                        reject()
+                        reject();
                     }
                 }
             });
