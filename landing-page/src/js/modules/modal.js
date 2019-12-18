@@ -27,4 +27,4 @@ function modalModule(){
     });
 }
 
-module.exports = modalModule;
+export default modalModule;

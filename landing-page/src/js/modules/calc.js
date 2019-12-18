@@ -42,4 +42,4 @@ function calcModule(){
         totalValue.innerHTML = 0;
     });
 }
-module.exports = calcModule;
+export default calcModule;

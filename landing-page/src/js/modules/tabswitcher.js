@@ -1,11 +1,17 @@
 //tab switcher
 
 function tabsModule () {
+    $(function(){
+        $('.info-header-tab').on('click', function() {
+            $('.info-tabcontent').addClass('hide').eq($(this).index()).removeClass('hide');
+        });
+    });
+    
+/*     
     let tab = document.querySelectorAll('.info-header-tab'),
         info = document.querySelector('.info-header'),
         tabContent = document.querySelectorAll('.info-tabcontent');
 
-    //спрятать неактивные вкладки
     function hideTabContent(a){
         for (let i = a; i < tabContent.length; i++){
             tabContent[i].classList.remove('show');
@@ -14,7 +20,6 @@ function tabsModule () {
     }
     hideTabContent(1);
 
-    //переключение вкладок
     function showTabContent (b){
         if (tabContent[b].classList.contains('hide')){
             tabContent[b].classList.remove('hide');
@@ -32,7 +37,8 @@ function tabsModule () {
                 }
             }
         }
-    });
+    }); 
+*/
 }
 
-module.exports = tabsModule;
+export default tabsModule;

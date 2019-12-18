@@ -55,4 +55,4 @@ function formModule(){
     sendForm(form, input);
     sendForm(contactForm, contactInput);
 }
-module.exports = formModule;
+export default formModule;

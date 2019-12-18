@@ -48,4 +48,4 @@ function timerModule(){
     }
     setClock('timer', deadline);
 }
-module.exports = timerModule;
+export default timerModule;
